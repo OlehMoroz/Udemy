@@ -174,7 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showModalByScroll() {
         if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
-            openModal()
+            openModal();
             window.removeEventListener('scroll', showModalByScroll);
         }
     }
@@ -182,27 +182,82 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('scroll', showModalByScroll);
 
 
-    // Динамічний вивід блоків за допомогою сласів
+    // Динамічний вивід блоків за допомогою класів
 
     const menuWrap = document.querySelector('.menu__field .container');
 
     class MenuCard {
 
-        constructor(src, alt, title, desc, price) {
+        constructor(src, alt, title, desc, price, ...classes) {
             this.src = src;
             this.alt = alt;
             this.title = title;
             this.desc = desc;
             this.price = price;
+            this.classes = classes;
             this.transfer = 27;
+            this.changeToUAH();
         }
 
         changeToUAH() {
-            this.prise = this.price * this.transfer;
+            this.price = this.price * this.transfer;
         }
 
         render() {
+            const element = document.createElement('div');
 
+            if (this.classes.lenght === 0) {
+                this.element = 'menu__item';
+                element.classList.add(this.element);
+            } else {
+                this.classes.forEach(className => element.classList.add(className));
+            }
+
+            element.innerHTML = `
+                <img src="${this.src}" alt="${this.alt}">
+                <h3 class="menu__item-subtitle">${this.title}</h3>
+                <div class="menu__item-descr">${this.desc}</div>
+                <div class="menu__item-divider"></div>
+                <div class="menu__item-price">
+                    <div class="menu__item-cost">Цена:</div>
+                    <div class="menu__item-total"><span>${this.price}</span> грн/день</div>
+                </div>`;
+            menuWrap.append(element);
         }
     }
+
+    const menuCardItems = [{
+            src: 'img/tabs/vegy.jpg',
+            alt: 'vegy',
+            title: 'Меню "Фитнес"',
+            desc: 'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
+            price: 9,
+            classes: 'menu__item',
+        },
+        {
+            src: 'img/tabs/elite.jpg',
+            alt: 'elite',
+            title: 'Меню “Премиум”',
+            desc: 'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
+            price: 5
+        },
+        {
+            src: 'img/tabs/post.jpg',
+            alt: 'post',
+            title: 'Меню "Постное"',
+            desc: 'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков. ',
+            price: 8
+        }
+    ];
+
+    for (let i = 0; i < menuCardItems.length; i++) {
+        new MenuCard(
+            menuCardItems[i].src,
+            menuCardItems[i].alt,
+            menuCardItems[i].title,
+            menuCardItems[i].desc,
+            menuCardItems[i].price
+        ).render();
+    }
+
 });

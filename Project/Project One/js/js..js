@@ -72,7 +72,7 @@ if (4 == 9) {
 
 (num == 50) ? console.log('true') : console.log('false'); // Тернарний оператор
 
-const num = 50;
+let num = 50;
 
 switch (num) {
     case 49:
